@@ -1,0 +1,49 @@
+<%= erb :'admin/navigation' %>
+
+<ul id="products_navigation">
+  <li onclick="showUcc()"><a href="#">UCC</a></li>
+  <li onclick="showStemcell()"><a href="#">Stemcell</a></li>
+  <li onclick="showSoftware()"><a href="#">Software</a></li>
+</ul>
+
+<div class="products_view_container" id="ucc">
+  <div class="products">
+    <ul class="products_list">
+      <% products.each do |product| %>
+          <li>
+            <%= product %>
+            <input type="button" value="Delete" class="green" />
+            <input type="button" value="Edit" class="green" />
+            <p>Some description</p>
+          </li>
+      <% end %>
+    </ul>
+
+    <input type="button" value="Add" class="blue right" />
+  </div>
+  <div class="versions">
+    <ul class="versions_list">
+      <% products.each do |product| %>
+          <li>
+            <%= product %>
+            <input type="button" value="Delete" class="green" />
+            <input type="button" value="Edit" class="green" />
+            <p>Some description</p>
+          </li>
+      <% end %>
+    </ul>
+
+    <input type="button" value="Add" class="blue right" />
+  </div>
+
+  <div class="clear"></div>
+</div>
+
+<div class="products_view_container" id="stemcell">
+</div>
+
+<div class="products_view_container" id="software">
+</div>
+
+
+<script type="text/javascript" src="/scripts/products.js"></script>

@@ -1,0 +1,16 @@
+<%= erb :'admin/navigation' %>
+
+<div class="mirrors_view_container">
+    <ul class="mirrors_list">
+      <% mirrors.each do |mirror| %>
+          <li>
+            <%= mirror %>
+            <input type="button" value="Delete" class="green" />
+            <input type="button" value="Edit" class="green" />
+            <p>Some description about this mirror</p>
+          </li>
+      <% end %>
+
+      <input type="button" value="Add" class="blue right" />
+    </ul>
+</div>

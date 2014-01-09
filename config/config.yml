@@ -1,0 +1,12 @@
+---
+pid_filename: /tmp/uhuru_repository_manager.pid
+local_route: 10.0.0.1
+port: 9999
+dev_mode: true
+
+repository_manager:
+  domain: www.marius.me
+
+logging:
+  level: debug
+  file: /tmp/uhuru_webui.log

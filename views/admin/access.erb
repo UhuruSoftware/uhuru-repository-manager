@@ -1,0 +1,30 @@
+<%= erb :'admin/navigation' %>
+
+<div class="access_view_container">
+  <div class="users">
+    <ul class="users_list">
+      <% users.each do |user| %>
+          <li>
+            <%= user %>
+            <input type="button" value="Delete" class="green" />
+            <input type="button" value="Edit" class="green" />
+          </li>
+      <% end %>
+    </ul>
+
+    <input type="button" value="Add" class="blue right" />
+  </div>
+  <div class="access">
+    <ul class="access_list">
+      <% users.each do |user| %>
+          <li>
+            product 1
+            <input type="button" value="Enable" class="green" />
+            <input type="button" value="Disable" class="green" />
+          </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="clear"></div>
+</div>

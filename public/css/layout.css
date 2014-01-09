@@ -1,0 +1,208 @@
+/* color scheme address: http://colorschemedesigner.com/#2S627scqqcOho */
+
+
+/************************************************************************/
+/*Body and default settings*/
+/************************************************************************/
+*{
+    margin: 0;
+    padding: 0;
+    font-family: Tahoma, Arial, sans-serif;
+    color: #181929;
+}
+
+body
+{
+    text-align: center;
+    background-color: #181929;
+    font-size: 12px;
+}
+
+#wrapper
+{
+    margin-top: 5px;
+    padding-bottom: 20px;
+    width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+.hidden
+{
+    display: none;
+}
+
+.right
+{
+    float: right;
+}
+
+.clear
+{
+    clear: both;
+}
+
+a
+{
+    text-decoration: none;
+}
+
+/************************************************************************/
+/* View content */
+/************************************************************************/
+.content
+{
+    border: 1px solid #29ae78;
+    background-color: #ffffff;
+    color: #000000;
+    min-height: 400px;
+    width: 100%;
+    overflow: auto;
+}
+
+/*.header*/
+/*{*/
+    /*background: #0c7b4e;*/
+    /*color: #fff;*/
+    /*border:1px solid #29ae78;*/
+    /*text-align: right;*/
+    /*height: 28px;*/
+/*}*/
+
+.footer
+{
+    border: 1px solid #29ae78;
+    border-top: none;
+    background: #0c7b4e;
+    color: #fff;
+    padding: 3px;
+    text-align: center;
+}
+
+
+/************************************************************************/
+/* Header */
+/************************************************************************/
+
+h1
+{
+    color: #ffffff;
+    font-weight: normal;
+    font-size: 20px;
+    display: inline-block;
+}
+
+h2
+{
+    color: #000000;
+    font-weight: normal;
+    font-size: 16px;
+    padding-top: 30px;
+}
+
+h1 a
+{
+    color: white;
+}
+
+/************************************************************************/
+/* Buttons */
+/************************************************************************/
+
+input[type=submit],
+input[type=button]
+{
+    padding: 1px 8px 1px 8px;
+}
+
+input[type=submit]:hover,
+input[type=button]:hover
+{
+    cursor: pointer;
+}
+
+.blue
+{
+    color: #fff;
+    background: #195289;
+    border-color: #306da7;
+}
+
+.green
+{
+    color: #fff;
+    background: #0c7b4e;
+    border-color: #29ae78;
+}
+
+/************************************************************************/
+/*Input controls*/
+/************************************************************************/
+
+input[type=text],
+input[type=password],
+textarea
+{
+    border: 1px solid #dddddd;
+    padding: 2px;
+    width: 200px;
+}
+
+textarea
+{
+    height: 50px;
+}
+
+select
+{
+    width: 200px;
+}
+#select_version
+{
+    width: 150px;
+}
+
+
+/************************************************************************/
+/* Navigation and Link Lists */
+/************************************************************************/
+
+#navigation
+{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: #0c7b4e;
+}
+#products_navigation
+{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: #195289;
+}
+
+#navigation li
+{
+    display: inline;
+    cursor: pointer;
+    background: #0c7b4e;
+    /*border: 1px solid #29ae78;*/
+}
+#products_navigation li
+{
+    display: inline;
+    cursor: pointer;
+    background: #195289;
+    /*border: 1px solid #29ae78;*/
+}
+
+#navigation li a,
+#products_navigation li a
+{
+    padding-right: 20px;
+    padding-left: 20px;
+    font-size: 14px;
+    color: #ffffff;
+}
