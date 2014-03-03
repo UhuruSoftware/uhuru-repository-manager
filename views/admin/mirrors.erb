@@ -1,0 +1,35 @@
+<%= erb :'admin/navigation' %>
+
+<div class="view_container">
+    <fieldset class="list">
+        <legend>Mirrors list</legend>
+        <div>
+        <ul>
+          <%= mirrors == [] ? 'There are no mirrors available' : '' %>
+          <% mirrors.sort{|m1, m2| m1.name <=> m2.name}.each do |mirror| %>
+              <li>
+                <div class="<%= mirror.id.to_s == selected_mirror.to_s ? 'selected white_text' : '' %>" onclick='window.location.assign("<%= Uhuru::RepositoryManager::MIRRORS + '/' + mirror.id.to_s %>")'>
+                  <p class="title"><%= mirror.name %></p>
+                  <p class="description"><%= mirror.description %></p>
+                </div>
+
+                <form method="post" action="<%= Uhuru::RepositoryManager::MIRRORS + '/' + mirror.id.to_s + '/delete' %>" id="delete_form_<%= mirror.id.to_s.gsub(' ', '') %>">
+                  <input name="version" type="hidden" value="<%= mirror.id.to_s %>" />
+                  <input type="button" value="Delete" class="green" onclick="if(confirm('Are you sure you want to remove this mirror?')) $('#delete_form_' + '<%= mirror.id.to_s.gsub(' ', '') %>').submit();" />
+                </form>
+              </li>
+          <% end %>
+
+          <input type="button" value="Add" class="blue right" onclick='window.location.assign("<%= Uhuru::RepositoryManager::MIRRORS + '/add/new' %>")' />
+        </ul>
+        </div>
+    </fieldset>
+
+  <% if selected_mirror %>
+      <%= erb :'admin/forms/edit_mirrors', :locals => {:selected_mirror => selected_mirror, :mirrors => mirrors, :error_message => defined?(error_message) ? error_message : nil } %>
+  <% end %>
+
+  <% if defined?(new_mirror) %>
+      <%= erb :'admin/forms/add_mirror', :locals => {:error_message => defined?(error_message) ? error_message : nil} %>
+  <% end %>
+</div>

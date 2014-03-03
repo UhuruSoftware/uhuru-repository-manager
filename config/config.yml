@@ -1,0 +1,87 @@
+---
+pid_filename: /tmp/uhuru_repository_manager.pid
+local_route: 10.0.0.1
+port: 9000
+dev_mode: true
+
+repository_manager:
+  domain: www.marius.me
+  activation_link_expiration_days: 2
+  activation_email: |
+    Hello <%= first_name %>,<br />
+    <br />
+    This is an activation e-mail for your Uhuru Repository Manager account at <%= domain %>.<br />
+    Activation link: <a href="<%= activation_link %>"><%= activation_link %></a><br />
+    Please note that the activation link will expire in <%= expire_in_days %> days.<br />
+    <br />
+    Thank you for your support,<br />
+    The Uhuru Software team<br />
+  password_recovery_email: |
+    Hello <%= first_name %>,<br />
+    <br />
+    We received a request for a password reset for your account at <%= domain %>.<br />
+    Please ignore this e-mail if you did not request this and let us know at <%= administrator_email %>.<br />
+    Click on this link to reset your password: <a href="<%= reset_link %>"><%= reset_link %></a><br />
+    <br />
+    Please note that the link will expire in <%= expire_in_hours %> hours.<br />
+    <br />
+    Thank you for your support,<br />
+    The Uhuru Software team<br />
+  password_reset_email: |
+    Hello <%= first_name %>,<br />
+    <br />
+    We have reset the password for your account at <%= domain %>.<br />
+    If you did not request this, please let us know at <%= administrator_email %>.<br />
+    Please login soon at <a href="http://<%= domain %>">http://<%= domain %></a> and change your password.<br />
+    <br />
+    Your new password is: <b><%= generated_password %></b><br />
+    <br />
+    Thank you for your support,<br />
+    The Uhuru Software team<br />
+  reset_password_expiration_hours: 1
+  administrator_email: public@uhurusoftware.com
+
+
+logging:
+  level: debug
+  file: /tmp/urm.log
+
+db:
+  database: postgres://uhuru:8dXk8whmkzWZ8fXG93G2teVN@173.247.73.121:30001/repositories
+  connection_options: {"max_connections":32,"pool_timeout":10}
+
+master_mirror:
+  domain: urm-us-west.uhurusoftware.com
+  description: "This is the default Uhuru Software mirror, hosted on the West Coast of the United States."
+  status: true
+  blobstore_provider: sftp
+  blobstore_options:
+    endpoint: localhost
+    user: adauser
+    blobstore_path: /tmp/blob/
+    tmp_local_directory: /tmp/uploaded_versions/
+
+path_password_file: /tmp/.htpasswd
+path_home_user: /tmp/
+
+recaptcha:
+  use_recaptcha: false
+  recaptcha_public_key: 6LfuXN4SAAAAAAVoUDfpUzxftBrpecXQSzTuKcZk
+  recaptcha_private_key: 6LfuXN4SAAAAAEuH--10s_lH_HMeYdjQtxha3UKd
+
+email:
+  from: mailer.service@uhurusoftware.com
+  from_alias: Uhuru Repository Manager
+  server: pod51010.outlook.com
+  port: 587
+  user: mailer.service@uhurusoftware.com
+  secret: freed0m!
+  auth_method: :login
+  enable_tls: 'true'
+
+javascript_upload:
+  max_file_size: 5000Mb
+  image_files: iso
+  zip_files: zip,rar,tgz,tar.gz,tar.bz2
+  multi_selection: false
+  browse_button: pickfile

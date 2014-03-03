@@ -1,0 +1,11 @@
+<script type="text/javascript" src="/scripts/products.js"></script>
+
+<ul id="navigation">
+    <li><a href="<%= Uhuru::RepositoryManager::DASHBOARD %>" class="<%= request.path_info.start_with?(Uhuru::RepositoryManager::DASHBOARD) ? 'selected' : ''  %>">Dashboard</a></li>
+    <li><a href="<%= Uhuru::RepositoryManager::PRODUCTS %>" class="<%= request.path_info.start_with?(Uhuru::RepositoryManager::PRODUCTS) ? 'selected' : ''  %>" onclick="showProductType('ucc')">Products</a></li>
+    <li><a href="<%= Uhuru::RepositoryManager::MIRRORS %>" class="<%= request.path_info.start_with?(Uhuru::RepositoryManager::MIRRORS) ? 'selected' : ''  %>">Mirrors</a></li>
+    <li><a href="<%= Uhuru::RepositoryManager::USERS %>" class="<%= request.path_info.start_with?(Uhuru::RepositoryManager::USERS) ? 'selected' : ''  %>">Users</a></li>
+    <li><a href="<%= Uhuru::RepositoryManager::ACCESS %>" class="<%= request.path_info.start_with?(Uhuru::RepositoryManager::ACCESS) ? 'selected' : ''  %>">Access</a></li>
+    <li><a href="<%= Uhuru::RepositoryManager::ADMIN_KEYS %>" class="<%= request.path_info.start_with?(Uhuru::RepositoryManager::ADMIN_KEYS) ? 'selected' : ''  %>">Keys</a></li>
+    <li class="right"><a href="<%= Uhuru::RepositoryManager::ADMIN_ACCOUNT_SETTINGS %>" class="<%= request.path_info.start_with?(Uhuru::RepositoryManager::ADMIN_ACCOUNT_SETTINGS) ? 'selected' : ''  %>">Account Settings</a></li>
+</ul>

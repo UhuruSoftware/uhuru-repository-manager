@@ -1,0 +1,59 @@
+<% if logged_in_as_admin? %>
+    <%= erb :'admin/navigation' %>
+<% else %>
+    <%= erb :'user/navigation' %>
+<% end %>
+
+<!--  inline css to style this particular view  -->
+<div class="view_container" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+
+  <%
+     user_id = Uhuru::RepositoryManager::Model::Users.get_users(:username => session[:username]).first.id
+     access_keys_count = Uhuru::RepositoryManager::Model::AccessKeys.get_access_keys_by_user(user_id).size
+  %>
+
+  <% if access_keys_count == 0 %>
+      <div>
+        <h2 style="color:red">Looks like you don't have any ssh keys setup. Please setup your ssh keys before you begin the installation of UCC.</h2>
+      </div>
+  <% end %>
+
+  <br />
+
+  <div>
+    To setup the Uhuru Cloud Commander you have to start with an Ubuntu Server 10.04 box, that has OpenSSH installed on it.<br />
+    After the Ubuntu server is installed, setup curl on it: <span class="generic_code">apt-get install curl</span><br />
+    You then have to create an ssh key on that box: use <span class="generic_code">sudo ssh-keygen</span> and make sure to generate the keys to their default location.<br />
+    Then add the public key (<span class="generic_code">/root/.ssh/id_rsa.pub</span>) on the 'Keys' page.<br />
+    <br />
+    After that is done, run the installation command for one of the mirrors, as <b><span class="generic_code">root</span></b><br/>
+    Note that the installation is a lengthy process.
+  </div>
+  <br />
+  <br />
+  <fieldset class="list" style="width: 100%;">
+    <legend>Mirrors</legend>
+    <div style="width: 100%;">
+      <ul>
+        <% sys_user = Uhuru::RepositoryManager::Model::Users.get_users(:username => session[:username]).first.user_sys %>
+        <%= mirrors == [] ? 'There are no mirrors available' : '' %>
+        <% mirrors.sort{|m1, m2| m1.name <=> m2.name}.each do |mirror| %>
+            <li style="width: 97%;">
+
+              <% install_command = "curl -sSL http://#{$config[:repository_manager][:domain]}/install/script.sh | bash -s #{mirror.hostname} #{sys_user}" %>
+
+              <div style="width: 100%;">
+                <p class="title"><%= mirror.name %></p>
+                <p class="description"><%= mirror.description %></p>
+
+                <!-- this will be shown from the small script, getting the last child of the current element -->
+                <code class="mirror_code">
+                  <%= install_command %>
+                </code>
+              </div>
+            </li>
+        <% end %>
+      </ul>
+    </div>
+  </fieldset>
+</div>

@@ -1,0 +1,23 @@
+<fieldset class="details">
+  <legend>New mirror</legend>
+  <form method="post" action="<%= Uhuru::RepositoryManager::ADD_MIRROR %>">
+    <div><label for="mirror_name">Mirror</label>              <input name="mirror_name" type="text" id="mirror_name" value=""></div>
+    <div><label for="hostname">Hostname</label>               <input name="hostname" type="text" id="hostname" value=""></div>
+    <div><label for="status">Status</label>
+      <select name="status" id="status">
+        <option value="true">Online</option>
+        <option value="false">Offline</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="description">Description</label>
+      <textarea name="description" id="description"></textarea>
+    </div>
+
+    <div class="clear-height-10px"></div>
+    <input type="submit" value="Save" class="green right" />
+  </form>
+
+  <div class="error"><p><%= defined?(error_message) && error_message != nil ? error_message.message.capitalize : ''  %></p></div>
+</fieldset>

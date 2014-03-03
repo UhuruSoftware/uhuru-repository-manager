@@ -1,0 +1,210 @@
+<script type="text/javascript" src="/scripts/plupload.full.min.js"></script>
+
+<fieldset class="details">
+  <legend>&nbsp;&nbsp;<button onclick="showNewVersion();">Add new version</button>&nbsp;&nbsp;|&nbsp;&nbsp;<button onclick="showNewVersionViaSftp();">Import new version</button>&nbsp;&nbsp;</legend>
+
+  <!--  read if there is a file uploaded  -->
+  <% filename = nil %>
+  <%
+   folder = Uhuru::RepositoryManager::Model::Users.get_users(:username => session[:username]).first.user_sys
+   begin
+    Dir.foreach($config[:master_mirror][:blobstore_options][:tmp_local_directory] + folder) do |file|
+        next if file == '.' or file == '..'
+        filename = file
+    end
+   rescue Exception
+     filename = nil
+   end
+  %>
+
+  <div id="add_version_form">
+    <p class="form_titles">Add new version</p>
+      <!--  if there is a file uploaded do not show the select form again  -->
+      <form>
+        <div id="container">
+          <label>File</label>
+          <input type="button" id="pickfile" value="<%= filename != nil ? filename : '[Upload file]' %>" />
+          <pre id="console"></pre>
+        </div>
+
+        <div>
+          <label id="filelist_label" for="filelist">File</label>
+          <div id="filelist">Your browser doesn't have Flash, Silverlight or HTML5 support.</div>
+        </div>
+      </form>
+      <div class="clear-height-10px"></div>
+
+      <form method="post" action="<%= Uhuru::RepositoryManager::PRODUCTS + '/' + selected_product + '/versions/add/new' %>" enctype='multipart/form-data'>
+        <div><label for="version_name">Version name</label>             <input name="version_name" type="text" id="version_name" disabled></div>
+        <div><label for="type">Type</label>
+          <select name="type" id="type" disabled>
+            <option value="alpha">Alpha (a)</option>
+            <option value="beta">Beta (b)</option>
+            <option value="rc">Release Candidate (rc)</option>
+            <option value="nb">Nightly Build (nb)</option>
+            <option value="dev">Dev (dev)</option>
+            <option value="pre">Pre (pre)</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="description">Description</label>
+          <textarea name="description" id="description" disabled></textarea>
+        </div>
+
+        <div class="clear-height-10px"></div>
+        <input type="submit" class="green right hidden" value="Save" id="submit_version" />
+        <div class="error"><p><%= defined?(error_message) && error_message != nil ? error_message.message.capitalize : ''  %></p></div>
+      </form>
+  </div>
+
+  <div id="add_version_via_sftp_form" style="display: none">
+    <p class="form_titles">Import new version</p>
+
+    <form method="post" action="<%= Uhuru::RepositoryManager::PRODUCTS + '/' + selected_product + '/versions/add/new_sftp' %>">
+      <div><label for="server_path">Server path</label>               <input name="server_path" type="text" id="server_path"></div>
+      <div><label for="version_name">Version name</label>             <input name="version_name" type="text" id="version_name"></div>
+      <div><label for="type">Type</label>
+        <select name="type" id="type">
+          <option value="alpha">Alpha (a)</option>
+          <option value="beta">Beta (b)</option>
+          <option value="rc">Release Candidate (rc)</option>
+          <option value="nb">Nightly Build (nb)</option>
+          <option value="dev">Dev (dev)</option>
+          <option value="pre">Pre (pre)</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="description">Description</label>
+        <textarea name="description" id="description"></textarea>
+      </div>
+
+      <div class="clear-height-10px"></div>
+      <input type="submit" class="green right" value="Save" />
+      <div class="error"><p><%= defined?(error_message) && error_message != nil ? error_message.message.capitalize : ''  %></p></div>
+    </form>
+  </div>
+
+  <div class="clear" id="response_console"><img src="/images/loading.gif" width="25" height="25" style="float: right; padding-bottom: 5px;" class="hidden" id="loading_gif" /></div>
+</fieldset>
+
+<!--  show the submit button if the file is already uploaded   -->
+<% if filename %>
+    <script type="text/javascript">
+        document.getElementById('submit_version').style.display = 'block';
+        document.getElementById('version_name').disabled = false;
+        document.getElementById('type').disabled = false;
+        document.getElementById('description').disabled = false;
+    </script>
+<% end %>
+
+<!--  the main script used for the progress bar plugin   -->
+<script type="text/javascript">
+    var file_percent = null;
+    var uploader = new plupload.Uploader({
+        multi_selection: <%= $config[:javascript_upload][:multi_selection] %>,
+        runtimes : 'html5,flash,silverlight,html4',
+        browse_button : '<%= $config[:javascript_upload][:browse_button] %>',
+        container: document.getElementById('container'),
+        url : "<%= Uhuru::RepositoryManager::PRODUCTS + '/' + selected_product + '/versions/add/upload_file' %>",
+
+        filters : {
+            max_file_size : '<%= $config[:javascript_upload][:max_file_size] %>',
+            mime_types: [
+                {title : "Image files", extensions : "<%= $config[:javascript_upload][:image_files] %>"},
+                {title : "Zip files", extensions : "<%= $config[:javascript_upload][:zip_files] %>"}
+            ]
+        },
+
+        init: {
+            // Hide the filelist and label on page load
+            PostInit: function() {
+                document.getElementById('filelist').innerHTML = '';
+                document.getElementById('filelist_label').style.display = "none";
+            },
+
+            // Hide the container and show the files and labels to prevent upload of another file(one file can be uploaded at a time)
+            FilesAdded: function(up, files) {
+                plupload.each(files, function(file) {
+                    document.getElementById('filelist_label').style.display = "inline-block";
+                    document.getElementById('filelist').style.margin = "0";
+                    document.getElementById('container').style.display = "none";
+                    document.getElementById('filelist').innerHTML = '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
+                });
+            },
+
+            // Clear and refresh the console when necessary
+            UploadProgress: function(up, file) {
+                document.getElementById('console').innerHTML = "";
+                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+                file_percent = file.percent;
+
+                if(file_percent == 100)
+                {
+                    document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>Loading ... Please wait</span>';
+                }
+            },
+
+            // Show the error when needed
+            Error: function(up, err) {
+                document.getElementById('console').innerHTML = '<span style="color: #ff0000">' + "\nError #" + err.code + ": " + err.message + '</span>';
+            }
+        }
+    });
+
+    // The upload method for the selected file (warning message when user tries to leave or reload the page)
+    uploader.init();
+    uploader.bind('FilesAdded', function(up, files) {
+        if(uploader.state!=2 & files.length>0){
+            uploader.start();
+            document.getElementById('submit_version').style.display = 'none';
+            document.getElementById('version_name').disabled = true;
+            document.getElementById('type').disabled = true;
+            document.getElementById('description').disabled = true;
+            document.getElementById('pickfile').style.display = 'none';
+
+            window.onbeforeunload = function()
+            {
+                if(file_percent < 100)
+                {
+                    return "You have attempted to leave this page. Please wait until the file has uploaded in order to continue.";
+                }
+            }
+        }
+    });
+
+    // Reload the page when the file was fully uploaded
+    uploader.bind('FileUploaded', function() {
+        window.location.reload();
+    });
+</script>
+
+<% if session[:upload_state_blob_id] != nil %>
+    <script type="text/javascript">
+      var timer = setInterval(versionState, 2000);
+
+      function versionState()
+      {
+          $.get("<%= Uhuru::RepositoryManager::CHECK_VERSION_STATE %>", function(data){
+              if (data == 'Done')
+              {
+                  document.getElementById('response_console').innerHTML += '<div style="color: green;">Version was uploaded successfully!</div>' + '<br/>';
+                  document.getElementById('loading_gif').style.display = 'none';
+                  clearInterval(timer);
+              }
+              else if(data == 'Processing')
+              {
+                  document.getElementById('response_console').innerHTML = '<div style="color: yellowgreen;">Please wait. The version is uploading ...</div>' + '<br/>';
+                  document.getElementById('loading_gif').style.display = 'block';
+              }
+              else
+              {
+                  document.getElementById('response_console').innerHTML += '<div style="color: red;">An error occurred on uploading version file. Please contact your system administrator.</div>' + '<br/>';
+                  document.getElementById('loading_gif').style.display = 'none';
+                  clearInterval(timer);
+              }
+          });
+      }
+    </script>
+<% end %>

@@ -1,0 +1,99 @@
+<script type="text/javascript">
+    var selected = getSelectedProductType();
+    if(selected != '')
+    {
+        showProductType(selected);
+    }
+</script>
+
+<fieldset class="details">
+<legend>&nbsp;&nbsp;<button onclick="showVersions();">Versions</button>&nbsp;&nbsp;|&nbsp;&nbsp;<button onclick="showProperties();">Properties</button>&nbsp;&nbsp;</legend>
+
+<div id="versions_panel">
+  <p class="form_titles">Version list for <%= product.name %></p>
+    <table class="versions_header">
+      <tr>
+        <td>Version</td>
+        <td>Stable</td>
+        <td>Public</td>
+        <td></td>
+      </tr>
+      <% if versions != [] %>
+        <% versions.sort{|v1, v2| v1.name <=> v2.name}.each do |version| %>
+            <tr>
+              <td><%= version.name %></td>
+              <td>
+                <% if version.stable %>
+                    <img src="../images/check.png" width="20" height="20">
+                <% else %>
+                    <img src="../images/uncheck.png" width="20" height="20">
+                <% end %>
+              </td>
+              <td>
+                <% if version.public %>
+                    <img src="../images/check.png" width="20" height="20">
+                <% else %>
+                    <img src="../images/uncheck.png" width="20" height="20">
+                <% end %>
+              </td>
+
+              <td>
+                <form method="post" action="<%= Uhuru::RepositoryManager::PRODUCTS + '/' + selected_product.to_s + '/versions/' + version.id.to_s + '/delete' %>" id="delete_form_<%= version.id.to_s.gsub(' ', '') %>">
+                  <input name="version" type="hidden" value="<%= version.id %>" />
+                  <input type="button" value="Delete" class="green" onclick="if(confirm('Are you sure you want to remove this version?')) $('#delete_form_' + '<%= version.id.to_s.gsub(' ', '') %>').submit();" />
+                </form>
+              </td>
+            </tr>
+        <% end %>
+      <% else %>
+        <tr><td colspan="3"><hr /></td></tr>
+        <tr><td colspan="3" style="text-align: center;">There are no versions available for this product.</td></tr>
+      <% end %>
+    </table>
+
+    <div class="clear-height-10px"></div>
+
+    <input type="button" value="Edit" class="green right" onclick='popUp("<%= Uhuru::RepositoryManager::PRODUCTS + '/' + selected_product.to_s + '/versions' %>")' />
+    <script type="text/javascript">
+        // Popup window code
+        function popUp(url) {
+            popupWindow = window.open(
+                    url,'popUpWindow','height=600,width=1100,left=10,top=10,resizable=yes,scrollbars=no,toolbar=yes,menubar=no,location=no,directories=no,status=yes')
+        }
+    </script>
+</div>
+
+<div id="properties_panel">
+  <p class="form_titles">Properties for <%= product.name %></p>
+    <form method="post" action="<%= Uhuru::RepositoryManager::PRODUCTS + '/' + selected_product.to_s %>">
+      <div><label for="product_name">Product name</label>         <input name="product_name" type="text" id="product_name" value="<%= product.name %>"></div>
+      <div><label for="type">Type</label>
+        <select name="type" id="type">
+          <option value="ucc" <%= product.type == 'ucc' ? 'selected' : '' %>>UCC</option>
+          <option value="stemcell" <%= product.type == 'stemcell' ? 'selected' : '' %>>Stemcell</option>
+          <option value="software" <%= product.type == 'software' ? 'selected' : '' %>>Software</option>
+        </select>
+      </div>
+      <div><label for="label">Label</label>                       <input name="label" type="text" id="label" value="<%= product.label %>"></div>
+
+      <div>
+        <label for="description">Description</label>
+        <textarea name="description" id="description"><%= product.description %></textarea>
+      </div>
+
+      <div class="clear-height-10px"></div>
+      <input type="submit" value="Save" class="green right" />
+    </form>
+
+  <div class="error"><p><%= defined?(error_message) && error_message != nil ? error_message.message.capitalize : ''  %></p></div>
+</div>
+
+
+<!-- if there is an error, the error if from the properties panel  -->
+<% if error_message != nil %>
+    <script type="text/javascript">
+        document.getElementById('properties_panel').style.display = 'block';
+        document.getElementById('versions_panel').style.display = 'none';
+    </script>
+<% end %>
+</fieldset>

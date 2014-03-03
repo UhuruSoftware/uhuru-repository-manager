@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+<head>
+  <title>Uhuru Repository Manager</title>
+  <link rel="stylesheet" href="/css_layout" type="text/css" />
+  <link rel="stylesheet" href="/css_views" type="text/css" />
+  <script type="text/javascript" src="/scripts/jquery-1.5.js"></script>
+  <meta charset="utf-8" />
+</head>
+
+
+<%
+   if
+   request.env['sinatra.route'] == "GET " + Uhuru::RepositoryManager::VERSIONS ||
+   request.env['sinatra.route'] == "GET " + Uhuru::RepositoryManager::EDIT_VERSION ||
+   request.env['sinatra.route'] == "GET " + Uhuru::RepositoryManager::ADD_VERSION ||
+   request.env['sinatra.route'] == "POST " + Uhuru::RepositoryManager::VERSIONS ||
+   request.env['sinatra.route'] == "POST " + Uhuru::RepositoryManager::EDIT_VERSION ||
+   request.env['sinatra.route'] == "POST " + Uhuru::RepositoryManager::ADD_VERSION
+     session[:is_inside_popup] = true
+   else
+     session[:is_inside_popup] = false
+   end
+%>
+
+
+<body>
+<div id="wrapper">
+  <% if session[:logged_in?] %>
+      <% if session[:is_admin?] %>
+        <h1><a href="<%= Uhuru::RepositoryManager::DASHBOARD %>" class="website_title">Uhuru Repository Manager</a></h1>
+      <% else %>
+        <h1><a href="<%= Uhuru::RepositoryManager::USER_DASHBOARD %>" class="website_title">Uhuru Repository Manager</a></h1>
+      <% end %>
+  <% else %>
+    <h1><a href="<%= Uhuru::RepositoryManager::INDEX %>" class="website_title">Uhuru Repository Manager</a></h1>
+  <% end %>
+
+  <% if session[:logged_in?] %>
+    <a href="<%= Uhuru::RepositoryManager::LOGOUT %>" class="logout_button">Logout</a>
+  <% end %>
+
+  <div class="content">
+
+    <%= yield %>
+
+  </div>
+  <% unless session[:is_inside_popup] %>
+    <div class="footer">Copyright &copy; 2013 Uhuru Software, Inc., All Rights Reserved</div>
+  <% end %>
+</div>
+
+</body>
+</html>

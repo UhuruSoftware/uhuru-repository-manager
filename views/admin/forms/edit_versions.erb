@@ -1,0 +1,154 @@
+<div class="versions_modal_header">
+  <div class="modal_title">Versions available for <%= products.find{|product| product.id.to_s == selected_product}.name %></div>
+</div>
+
+<div class="view_container">
+    <fieldset class="list">
+    <legend>Versions</legend>
+      <div>
+      <ul>
+        <%= versions == [] ? 'There are no versions available' : '' %>
+        <% versions.sort{|v1, v2| v1.name <=> v2.name}.each do |version| %>
+            <li >
+              <div class="<%= version.id.to_s == selected_version.to_s ? 'selected white_text' : '' %>" onclick='window.location.assign("<%= Uhuru::RepositoryManager::PRODUCTS + '/' + selected_product.to_s + '/versions/' + version.id.to_s %>")'>
+                <p class="title"><%= version.name %></p>
+                <p class="description"><%= version.description || 'There is no description available.' %></p>
+              </div>
+
+              <form method="post" action="<%= Uhuru::RepositoryManager::PRODUCTS + '/' + selected_product.to_s + '/versions/' + version.id.to_s + '/delete' %>" id="delete_form_<%= version.id.to_s.gsub(' ', '') %>">
+                <input name="version" type="hidden" value="<%= version.id %>" />
+                <input type="button" value="Delete" class="green" onclick="if(confirm('Are you sure you want to remove this version?')) $('#delete_form_' + '<%= version.id.to_s.gsub(' ', '') %>').submit();" />
+              </form>
+            </li>
+        <% end %>
+
+        <input type="button" value="Add" class="blue right" onclick='window.location.assign("<%= Uhuru::RepositoryManager::PRODUCTS + '/' + selected_product.to_s + '/versions/add/new' %>")' />
+      </ul>
+      </div>
+    </fieldset>
+
+  <% if selected_version %>
+  <% version = versions.find{|version| version.id.to_s == selected_version.to_s} %>
+      <fieldset class="details">
+        <legend>&nbsp;&nbsp;<button onclick="showVersionDetails();">Version details</button>&nbsp;&nbsp;|&nbsp;&nbsp;<button onclick="showVersionDependencies();">Version dependencies</button>&nbsp;&nbsp;</legend>
+
+        <div id="version_details">
+          <p class="form_titles"><%= products.find{|product| product.id.to_s == selected_product}.name %> : <%= version.name %> details</p>
+            <form method="post" action="<%= Uhuru::RepositoryManager::PRODUCTS + '/' + selected_product.to_s + '/versions/' + selected_version.to_s %>">
+              <div><label for="version_name">Version name</label>             <input name="version_name" type="text" id="version_name" value="<%= version.name %>"></div>
+              <div><label for="type">Type</label>
+                <select name="type" id="type">
+                  <option value="alpha" <%= version.type == 'alpha' ? 'selected' : '' %>>Alpha (a)</option>
+                  <option value="beta" <%= version.type == 'beta' ? 'selected' : '' %>>Beta (b)</option>
+                  <option value="rc" <%= version.type == 'rc' ? 'selected' : '' %>>Release Candidate (rc)</option>
+                  <option value="nb" <%= version.type == 'nb' ? 'selected' : '' %>>Nightly Build (nb)</option>
+                  <option value="dev" <%= version.type == 'dev' ? 'selected' : '' %>>Dev (dev)</option>
+                  <option value="pre" <%= version.type == 'pre' ? 'selected' : '' %>>Pre (pre)</option>
+                </select>
+              </div>
+              <div><label for="stable">Is stable?</label>                      <input name="stable" type="checkbox" id="stable" <%= version.stable ? 'checked' : '' %>></div>
+              <div><label for="public">Is public?</label>                      <input name="public" type="checkbox" id="public" <%= version.public ? 'checked' : '' %>></div>
+
+              <div>
+                <label for="description">Description</label>
+                <textarea name="description" id="description"><%= version.description || 'There is no description available.' %></textarea>
+              </div>
+
+              <div class="clear-height-10px"></div>
+              <input type="submit" value="Save" class="green right" />
+            </form>
+
+            <div class="error"><p><%= defined?(error_message) && error_message != nil ? error_message.message.capitalize : ''  %></p></div>
+        </div>
+
+        <div id="version_dependencies">
+          <p class="form_titles">Dependencies tab for <%= products.find{|product| product.id.to_s == selected_product}.name %> : <%= version.name %></p>
+
+          <form method="post" action="<%= Uhuru::RepositoryManager::PRODUCTS + '/' + selected_product.to_s + '/versions/' + selected_version.to_s + '/add_dependency' %>">
+            <div>
+              <label for="parent_version">Available products</label>
+
+              <!--  select button for selecting a product  -->
+              <select onChange='window.location.assign("<%= Uhuru::RepositoryManager::PRODUCTS + '/' + selected_product.to_s + '/versions/' + selected_version.to_s + '/' %>" + this.options[this.selectedIndex].value + "/refresh");'>
+                <option>Choose a product to load the versions ...</option>
+                <% dependency_products.each do |dep_product| %>
+                    <% if defined?(selected_dependency_product_id) %>
+                        <option value="<%= dep_product.id %>" <%= dep_product.id.to_s == selected_dependency_product_id ? 'selected' : '' %>><%= dep_product.name %></option>
+                    <% else %>
+                        <option value="<%= dep_product.id %>"><%= dep_product.name %></option>
+                    <% end %>
+                <% end %>
+              </select>
+            </div>
+
+            <div>
+              <label for="parent_version">Available versions</label>
+
+              <!--  select button for selecting a version from the current product in the selection box above  -->
+              <select name="parent_version" id="add_dependency_select">
+                <% if dependencies == [] %>
+                    <script type="text/javascript">
+                      document.getElementById('add_dependency_select').disabled = true;
+                    </script>
+                <% else %>
+                    <option>Choose a dependency ...</option>
+                    <% dependencies.each do |dependency| %>
+                        <option value="<%= dependency.id %>"><%= dependency.name %></option>
+                    <% end %>
+                <% end %>
+              </select>
+            </div>
+
+            <input type="submit" value="Add as dependency" class="green right" />
+          </form>
+
+          <div class="space_height"></div>
+
+          <div>
+            <form>
+              <label>Dependency name</label>
+              <div class="clear"></div>
+            </form>
+            <%= version.dependencies == [] ? '<hr/>There are no dependencies for this product.' : '' %>
+            <% version.dependencies.each do |dependency| %>
+                <form method="post" action="<%= Uhuru::RepositoryManager::PRODUCTS + '/' + selected_product.to_s + '/versions/' + selected_version.to_s + '/delete_dependency' %>">
+                    <label for="dependency" style="display: inline-block; height: 26px;">
+                      <% version = Uhuru::RepositoryManager::Model::Versions.get_versions(:id => dependency.version_id ).first %>
+                      <%= Uhuru::RepositoryManager::Model::Products.get_products(:id => version.product_id ).first.name %> :
+                      <%= version.name %>
+                    </label>
+                    <input type="hidden" name="dependency" value="<%= dependency.id %>" />
+                    <input type="submit" value="Delete" class="green right" />
+                </form>
+            <% end %>
+          </div>
+
+        </div>
+      </fieldset>
+  <% end %>
+
+  <% if defined?(new_version) %>
+      <%= erb :'admin/forms/add_version', :locals => { :selected_product => selected_product.to_s, :error_message => defined?(error_message) ? error_message : nil, :products => products } %>
+  <% end %>
+
+  <!-- if there is an error, the error if from the version details panel  -->
+  <% if defined?(error_message) && error_message != nil %>
+      <script type="text/javascript">
+          document.getElementById('version_details').style.display = 'block';
+          document.getElementById('version_dependencies').style.display = 'none';
+      </script>
+  <% end %>
+</div>
+
+<script type="text/javascript" src="/scripts/products.js"></script>
+<!-- hide title and logout button for this window -->
+<script type="text/javascript">
+    $('.logout_button').hide();
+    $('.website_title').hide();
+</script>
+
+<% if defined?(selected_dependency_product_id) %>
+    <script type="text/javascript">
+        showVersionDependencies();
+    </script>
+<% end %>

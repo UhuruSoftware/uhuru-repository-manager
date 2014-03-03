@@ -1,0 +1,42 @@
+<fieldset class="details">
+  <legend>New product</legend>
+  <form method="post" action="<%= Uhuru::RepositoryManager::ADD_PRODUCT %>">
+    <div><label for="product_name">Product name</label>         <input name="product_name" type="text" id="product_name" value=""></div>
+    <div><label for="type">Type</label>
+      <select id="type" disabled>
+        <option value="ucc">UCC</option>
+        <option value="stemcell">Stemcell</option>
+        <option value="software">Software</option>
+      </select>
+
+      <select id="hidden_type" name="type" class="hidden">
+        <option value="ucc"></option>
+        <option value="stemcell"></option>
+        <option value="software"></option>
+      </select>
+    </div>
+    <div><label for="label">Label</label>                       <input name="label" type="text" id="label" value=""></div>
+
+    <div>
+      <label for="description">Description</label>
+      <textarea name="description" id="description"></textarea>
+    </div>
+
+    <div class="clear-height-10px"></div>
+    <input type="submit" value="Save" class="green right" />
+
+    <div class="error"><p><%= defined?(error_message) && error_message != nil ? error_message.message.capitalize : ''  %></p></div>
+  </form>
+</fieldset>
+
+<script type="text/javascript">
+    var selected = getSelectedProductType();
+    if(selected != '')
+    {
+        showProductType(selected);
+        // change the select option for the add product to match the case
+        document.getElementById('type').value=selected;
+        document.getElementById('hidden_type').value=selected;
+        document.getElementById('hidden_type').style.display = 'none';
+    }
+</script>

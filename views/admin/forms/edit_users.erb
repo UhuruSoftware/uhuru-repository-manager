@@ -1,0 +1,41 @@
+<% user = users.find{|user| user.id.to_s == selected_user.to_s} %>
+<fieldset class="details">
+  <legend>User Details</legend>
+  <form method="post" action="<%= Uhuru::RepositoryManager::USERS + '/' + user.id.to_s %>">
+    <div><label for="username">E-mail(username)</label>               <input name="username" type="text" id="username" value="<%= user.username %>"></div>
+    <div><label for="first_name">First name</label>           <input name="first_name" type="text" id="first_name" value="<%= user.first_name %>"></div>
+    <div><label for="last_name">Last name</label>             <input name="last_name" type="text" id="last_name" value="<%= user.last_name %>"></div>
+    <div><label for="active">Is active?</label>                <input name="is_active" type="checkbox" id="active" <%= user.active ? 'checked' : '' %>></div>
+    <div><label for="is_admin">Is admin?</label>               <input name="is_admin" type="checkbox" id="is_admin" <%= user.admin ? 'checked' : '' %>></div>
+    <div><label for="job_title">Job title</label>             <input name="job_title" type="text" id="job_title" value="<%= user.job_title %>"></div>
+    <div><label for="organization">Organization</label>       <input name="organization" type="text" id="organization" value="<%= user.organization %>"></div>
+    <div>
+      <label for="country">Country</label>
+      <select id="country" name="country">
+        <% countries.each do |country| %>
+            <option value="<%= country %>" <%= country == user.country ? 'selected' : '' %>><%= country %></option>
+        <% end %>
+      </select>
+    </div>
+
+    <div>
+      <label for="city">City</label>
+      <input type="text" name="city" value="<%= user.city %>"/>
+    </div>
+
+    <div>
+      <label for="address">Address</label>
+      <input type="text" name="address" value="<%= user.address %>"/>
+    </div>
+
+    <div>
+      <label for="phone">Telephone</label>
+      <input type="text" name="phone" value="<%= user.phone %>"/>
+    </div>
+
+    <div class="clear-height-10px"></div>
+    <input type="submit" value="Save" class="green right" />
+  </form>
+
+  <div class="error"><p><%= defined?(error_message) && error_message != nil ? error_message.message.capitalize : ''  %></p></div>
+</fieldset>

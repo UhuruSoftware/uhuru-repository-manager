@@ -1,0 +1,79 @@
+<form action='<%= Uhuru::RepositoryManager::SIGNUP %>' method="post">
+  <div class="signup_div">
+    <div class="signup_content">
+      <table>
+        <tr>
+          <td><label for="username">E-mail *</label></td>
+          <td><input type="text" name="username" id="username" autofocus=""/></td>
+        </tr>
+
+        <tr>
+          <td><label for="first_name">First name *</label></td>
+          <td><input type="text" name="first_name" id="first_name"/></td>
+        </tr>
+
+        <tr>
+          <td><label for="last_name">Last Name *</label></td>
+          <td><input type="text" name="last_name" id="last_name"/></td>
+        </tr>
+
+        <tr>
+          <td><label for="password">Password *</label></td>
+          <td><input type="password" name="password" autocomplete="off"/></td>
+        </tr>
+
+        <tr>
+          <td><label for="confirm_password">Confirm Password *</label></td>
+          <td><input type="password" name="confirm_password"/></td>
+        </tr>
+
+        <tr>
+          <td><label for="job_title">Job Title *</label></td>
+          <td><input type="text" name="job_title"/></td>
+        </tr>
+
+        <tr>
+          <td><label for="organization">Organization *</label></td>
+          <td><input type="text" name="organization" id="organization"/></td>
+        </tr>
+
+        <tr>
+          <td><label for="country">Country</label></td>
+          <td>
+            <select id="country" name="country">
+              <% countries.each do |country| %>
+                  <option value="<%= country %>"><%= country %></option>
+              <% end %>
+            </select>
+          </td>
+        </tr>
+
+        <tr>
+          <td><label for="city">City</label></td>
+          <td><input type="text" name="city"/></td>
+        </tr>
+
+        <tr>
+          <td><label for="address">Address</label></td>
+          <td><input type="text" name="address"/></td>
+        </tr>
+
+        <tr>
+          <td><label for="phone">Telephone</label></td>
+          <td><input type="text" name="phone"/></td>
+        </tr>
+      </table>
+      <% if $config[:recaptcha][:use_recaptcha] == true || $config[:recaptcha][:use_recaptcha] == 'true' %>
+          <%= recaptcha_tag :challenge, :language => :en, :ssl => true %>
+      <% end %>
+
+      <div>
+        <input class="blue" type="submit" name="Submit" value="Register" />
+      </div>
+
+      <div>The field marked with (*) are mandatory.</div>
+
+      <div class="error"><p><%= defined?(error_message) && error_message != nil ? error_message.message.capitalize : ''  %></p></div>
+    </div>
+  </div>
+</form>

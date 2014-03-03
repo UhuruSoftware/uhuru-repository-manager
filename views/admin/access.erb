@@ -1,0 +1,44 @@
+<%= erb :'admin/navigation' %>
+
+<div class="view_container">
+  <fieldset class="list accesses">
+  <legend>Users available</legend>
+    <div>
+        <ul>
+          <%= users == [] ? 'There are no users available' : '' %>
+          <% users.sort{|u1, u2| u1.username <=> u2.username}.each do |user| %>
+              <li>
+                <!-- this div can take 100% of width because it wont have any actions -->
+                <div class="<%= user.id.to_s == selected_user ? 'selected white_text' : '' %>" onclick='window.location.assign("<%= Uhuru::RepositoryManager::ACCESS + '/' + user.id.to_s %>")' style="max-width: 100%;">
+                  <p class="title"><%= user.username %></p>
+                  <p class="description"><%= user.first_name + ' ' + user.last_name %></p>
+                </div>
+              </li>
+          <% end %>
+        </ul>
+    </div>
+  </fieldset>
+
+  <% if selected_user %>
+    <% user = users.find{|user| user.id.to_s == selected_user} %>
+    <% user_products = user.products %>
+      <fieldset class="details">
+      <legend><%= user.username %> accesses</legend>
+        <form method="post" action="<%= Uhuru::RepositoryManager::ACCESS + '/' + user.id.to_s %>" id="user_accesses">
+            <% accesses.each do |access| %>
+               <% if user_products.find{|product| product.name == access.name} %>
+                 <div class="access"><label for="<%= access.id.to_s %>"><%= access.name %></label><input type="checkbox" name="access_state_<%= access.id.to_s %>" checked></div>
+               <% else %>
+                 <div class="access"><label for="<%= access.id.to_s %>"><%= access.name %></label><input type="checkbox" name="access_state_<%= access.id.to_s %>"></div>
+               <% end %>
+            <% end %>
+
+          <input type="hidden" name="user_id" value="<%= user.id.to_s %>" />
+          <input type="submit" value="Save" class="green right" />
+        </form>
+
+        <div class="error"><p><%= defined?(error_message) && error_message != nil ? error_message.message.capitalize : ''  %></p></div>
+      </fieldset>
+  <% end %>
+
+</div>

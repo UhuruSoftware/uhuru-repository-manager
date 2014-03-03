@@ -1,0 +1,32 @@
+<div class="view_container">
+  <h1 class="black_text">Welcome!</h1>
+  <div class="space_height"></div>
+  <p>
+    This is the subscription management site for your Uhuru Cloud Commander.
+  </p>
+  <p>
+    Login below or <a href="<%= Uhuru::RepositoryManager::SIGNUP %>"><button class="blue">Sign Up</button></a> for a new account.
+  </p>
+  <div class="space_height"></div>
+
+  <form action='<%= Uhuru::RepositoryManager::LOGIN %>' method="post">
+    <div class="login_div">
+      <div class="login_content">
+        <div>
+          <label for="username">E-mail</label>
+          <input type="text" name="username" id="username" autofocus=""/>
+        </div>
+        <div>
+          <label for="password">Password</label>
+          <input type="password" name="password" id="password"/>
+        </div>
+        <div>
+          <input class="blue" type="submit" name="Submit" value="Login" />
+        </div>
+
+        <div><a href="<%= Uhuru::RepositoryManager::FORGOT_PASSWORD %>">Forgot password?</a></div>
+        <div class="error"><p><%= defined?(error_message) && error_message != nil ? error_message.message.capitalize : ''  %></p></div>
+      </div>
+    </div>
+  </form>
+</div>

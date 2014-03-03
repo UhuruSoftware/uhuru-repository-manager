@@ -1,0 +1,96 @@
+<%= erb :'admin/navigation', :locals => {:selected_product => selected_product, :selected_version => nil} %>
+
+<ul id="products_navigation">
+  <li onclick="showProductType('ucc')"><a href="#">UCC</a></li>
+  <li onclick="showProductType('stemcell')"><a href="#">Stemcell</a></li>
+  <li onclick="showProductType('software')"><a href="#">Software</a></li>
+</ul>
+
+<div class="view_container">
+  <% ucc = products.find_all{|product| product.type == 'ucc'} %>
+  <% software = products.find_all{|product| product.type == 'software'} %>
+  <% stemcell = products.find_all{|product| product.type == 'stemcell'} %>
+
+  <fieldset class="list" id="ucc">
+  <legend>UCC versions available</legend>
+    <div>
+    <ul>
+      <%= ucc == [] ? 'There are no ucc versions available' : '' %>
+      <% ucc.sort{|p1, p2| p1.name <=> p2.name}.each do |product| %>
+          <li>
+            <div class="<%= product.id.to_s == selected_product.to_s ? 'selected white_text' : '' %>" onclick='window.location.assign("<%= Uhuru::RepositoryManager::PRODUCTS + '/' + product.id.to_s %>")'>
+                <p class="title"><%= product.name %></p>
+                <p class="description"><%= product.description || 'There is no description available.' %></p>
+            </div>
+
+            <form method="post" action="<%= Uhuru::RepositoryManager::PRODUCTS + '/' + product.id.to_s + '/delete' %>" id="delete_form_<%= product.id.to_s.gsub(' ', '') %>">
+                <input name="product" type="hidden" value="<%= product.id %>" />
+                <input type="button" value="Delete" class="green" onclick="if(confirm('Are you sure you want to remove this product?')) $('#delete_form_' + '<%= product.id.to_s.gsub(' ', '') %>').submit();" />
+            </form>
+          </li>
+      <% end %>
+    </ul>
+
+    <input type="button" value="Add" class="blue right" onclick='window.location.assign("<%= Uhuru::RepositoryManager::PRODUCTS + '/add/new' %>")' />
+    </div>
+  </fieldset>
+
+  <fieldset class="list" id="software">
+  <legend>Software products available</legend>
+    <div>
+        <ul>
+          <%= software == [] ? 'There are no software products available' : '' %>
+          <% software.sort{|p1, p2| p1.name <=> p2.name}.each do |product| %>
+              <li>
+                <div class="<%= product.id.to_s == selected_product.to_s ? 'selected white_text' : '' %>" onclick='window.location.assign("<%= Uhuru::RepositoryManager::PRODUCTS + '/' + product.id.to_s %>")'>
+                  <p class="title"><%= product.name %></p>
+                  <p class="description"><%= product.description || 'There is no description available.' %></p>
+                </div>
+
+                <form method="post" action="<%= Uhuru::RepositoryManager::PRODUCTS + '/' + product.id.to_s + '/delete' %>" id="delete_form_<%= product.id.to_s.gsub(' ', '') %>">
+                  <input name="product" type="hidden" value="<%= product.id %>" />
+                  <input type="button" value="Delete" class="green" onclick="if(confirm('Are you sure you want to remove this product?')) $('#delete_form_' + '<%= product.id.to_s.gsub(' ', '') %>').submit();" />
+                </form>
+              </li>
+          <% end %>
+        </ul>
+
+        <input type="button" value="Add" class="blue right" onclick='window.location.assign("<%= Uhuru::RepositoryManager::PRODUCTS + '/add/new' %>")' />
+    </div>
+  </fieldset>
+
+  <fieldset class="list" id="stemcell">
+  <legend>Stemcell products available</legend>
+    <div>
+        <ul>
+          <%= stemcell == [] ? 'There are no stemcell products available' : '' %>
+          <% stemcell.sort{|p1, p2| p1.name <=> p2.name}.each do |product| %>
+              <li>
+                <div class="<%= product.id.to_s == selected_product.to_s ? 'selected white_text' : '' %>" onclick='window.location.assign("<%= Uhuru::RepositoryManager::PRODUCTS + '/' + product.id.to_s %>")'>
+                  <p class="title"><%= product.name %></p>
+                  <p class="description"><%= product.description || 'There is no description available.' %></p>
+                </div>
+
+                <form method="post" action="<%= Uhuru::RepositoryManager::PRODUCTS + '/' + product.id.to_s + '/delete' %>" id="delete_form_<%= product.id.to_s.gsub(' ', '') %>">
+                  <input name="product" type="hidden" value="<%= product.id %>" />
+                  <input type="button" value="Delete" class="green" onclick="if(confirm('Are you sure you want to remove this product?')) $('#delete_form_' + '<%= product.id.to_s.gsub(' ', '') %>').submit();" />
+                </form>
+              </li>
+          <% end %>
+        </ul>
+
+        <input type="button" value="Add" class="blue right" onclick='window.location.assign("<%= Uhuru::RepositoryManager::PRODUCTS + '/add/new' %>")' />
+    </div>
+  </fieldset>
+
+  <% if selected_product %>
+      <% product = products.find{|product| product.id.to_s == selected_product.to_s} %>
+      <%= erb :'admin/forms/edit_product', :locals => {:selected_product => selected_product, :product => product, :versions => versions, :error_message => defined?(error_message) ? error_message : nil } %>
+  <% end %>
+
+  <% if defined?(new_product) %>
+      <%= erb :'admin/forms/add_product', :locals => {:selected_product => selected_product, :error_message => defined?(error_message) ? error_message : nil} %>
+  <% end %>
+
+  <div class="clear"></div>
+</div>

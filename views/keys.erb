@@ -1,0 +1,61 @@
+<% if logged_in_as_admin? %>
+    <%= erb :'admin/navigation' %>
+<% else %>
+    <%= erb :'user/navigation' %>
+<% end %>
+
+<div class="view_container">
+  <fieldset class="list">
+    <legend>Available keys</legend>
+
+    <div>
+      <ul>
+        <%= access_keys == [] ? 'There are no access keys added.' : '' %>
+        <% access_keys.each do |key| %>
+            <li>
+              <div style="width: 100%;">
+                <p class="title"><%= key.name %></p>
+		           <p class="description" style="word-wrap: break-word;">
+                     <% key.value.scan(/.{1,1}/m).each do |line| %><%= line %><% end %>
+                   </p>
+                    <form method="post" action="<%= Uhuru::RepositoryManager::USER_DELETE_KEY %>">
+                        <input type="hidden" name="key" value="<%= key.value %>"/>
+                        <input type="submit" value="Delete" class="blue right" />
+                    </form>
+              </div>
+            </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div class="clear-height-10px"></div>
+  </fieldset>
+
+  <fieldset class="details">
+    <legend>Add new key</legend>
+    <!-- post for the specific user type -->
+    <% if logged_in_as_admin? %>
+        <% form_action = Uhuru::RepositoryManager::ADMIN_ADD_KEY %>
+    <% else %>
+        <% form_action = Uhuru::RepositoryManager::USER_ADD_KEY %>
+    <% end %>
+
+    <form method="post" action="<%= form_action %>">
+      <div>
+        <label for="name">Key name</label>
+        <input type="text" name="name" id="name" />
+      </div>
+
+      <div>
+        <label for="key">Key value</label>
+        <textarea name="key" id="key"></textarea>
+      </div>
+
+      <div class="clear-height-10px"></div>
+      <input type="submit" value="Add" class="green right" />
+    </form>
+
+    <div class="clear-height-10px"></div>
+    <div class="error"><p><%= defined?(error_message) && error_message != nil ? error_message.message.capitalize : ''  %></p></div>
+  </fieldset>
+</div>

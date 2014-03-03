@@ -1,0 +1,35 @@
+<%= erb :'admin/navigation' %>
+
+<div class="view_container">
+    <fieldset class="list">
+    <legend>Users list</legend>
+        <div>
+          <ul>
+            <%= users == [] ? 'There are no users available' : '' %>
+            <% users.sort{|u1, u2| u1.username <=> u2.username}.each do |user| %>
+                <li>
+                  <div class="<%= user.id.to_s == selected_user.to_s ? 'selected white_text' : '' %>" onclick='window.location.assign("<%= Uhuru::RepositoryManager::USERS + '/' + user.id.to_s %>")'>
+                    <p class="title"><%= user.username %></p>
+                    <p class="description"><%= user.first_name + ' ' + user.last_name %></p>
+                  </div>
+
+                  <form method="post" action="<%= Uhuru::RepositoryManager::USERS + '/' + user.id.to_s + '/delete' %>" id="delete_form_<%= user.id.to_s.gsub(' ', '') %>">
+                    <input name="username" type="hidden" value="<%= user.username %>" />
+                    <input type="button" value="Delete" class="green" onclick="if(confirm('Are you sure you want to remove this user?')) $('#delete_form_' + '<%= user.id.to_s.gsub(' ', '') %>').submit();" />
+                  </form>
+                </li>
+            <% end %>
+
+            <input type="button" value="Add" class="blue right" onclick='window.location.assign("<%= Uhuru::RepositoryManager::USERS + '/add/new' %>")' />
+          </ul>
+        </div>
+    </fieldset>
+
+  <% if selected_user %>
+      <%= erb :'admin/forms/edit_users', :locals => {:selected_user => selected_user, :users => users, :error_message => defined?(error_message) ? error_message : nil, :countries => defined?(countries) ? countries : nil } %>
+  <% end %>
+
+  <% if defined?(new_user) %>
+      <%= erb :'admin/forms/add_user', :locals => {:error_message => defined?(error_message) ? error_message : nil, :countries => defined?(countries) ? countries : nil} %>
+  <% end %>
+</div>

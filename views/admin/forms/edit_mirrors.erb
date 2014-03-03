@@ -1,0 +1,24 @@
+<% mirror = mirrors.find{|mirror| mirror.id.to_s == selected_mirror.to_s} %>
+<fieldset class="details">
+  <legend>Mirror details</legend>
+  <form method="post" action="<%= Uhuru::RepositoryManager::MIRRORS + '/' + mirror.name %>">
+    <div><label for="mirror_name">Mirror</label>              <input name="mirror_name" type="text" id="mirror_name" value="<%= mirror.name %>"></div>
+    <div><label for="hostname">Hostname</label>               <input name="hostname" type="text" id="hostname" value="<%= mirror.hostname %>"></div>
+    <div><label for="status">Status</label>
+      <select name="status" id="status">
+        <option value="true" <%= mirror.status ? 'selected' : '' %>>Online</option>
+        <option value="false" <%= !mirror.status ? 'selected' : '' %>>Offline</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="description">Description</label>
+      <textarea name="description" id="description"><%= mirror.description %></textarea>
+    </div>
+
+    <div class="clear-height-10px"></div>
+    <input type="submit" value="Save" class="green right" />
+  </form>
+
+  <div class="error"><p><%= defined?(error_message) && error_message != nil ? error_message.message.capitalize : ''  %></p></div>
+</fieldset>

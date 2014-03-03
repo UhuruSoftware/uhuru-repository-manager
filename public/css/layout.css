@@ -1,0 +1,265 @@
+/************************************************************************/
+/*Body and default settings*/
+/************************************************************************/
+*{
+    margin: 0;
+    padding: 0;
+    font-family: Tahoma, Arial, sans-serif;
+    color: #181929;
+}
+
+body
+{
+    text-align: center;
+    background-color: #181929;
+    font-size: 12px;
+}
+
+#wrapper
+{
+    margin-top: 5px;
+    padding-bottom: 20px;
+    width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+.hidden
+{
+    display: none;
+}
+
+.right
+{
+    float: right;
+}
+.right-5px
+{
+    float: right;
+    margin-right: 5px;
+}
+.right-15px
+{
+    float: right;
+    margin-right: 15px;
+}
+.clear
+{
+    clear: both;
+}
+.space_height
+{
+    clear: both;
+    height: 20px;
+}
+.clear-height-10px
+{
+    height: 10px;
+    clear: both;
+}
+
+a, a:visited, a:hover
+{
+    text-decoration: underline;
+    color: #0c7b4e;
+}
+
+.logout_button
+{
+    float: right;
+    color: #ffffff;
+}
+
+/************************************************************************/
+/* View content */
+/************************************************************************/
+.content
+{
+    border: 1px solid #29ae78;
+    background-color: #ffffff;
+    color: #000000;
+    min-height: 400px;
+    width: 100%;
+    overflow: auto;
+    padding-bottom: 50px;
+}
+
+.footer
+{
+    border: 1px solid #29ae78;
+    border-top: none;
+    background: #0c7b4e;
+    color: #fff;
+    padding: 3px;
+    text-align: center;
+}
+
+
+/************************************************************************/
+/* Header */
+/************************************************************************/
+
+h1
+{
+    color: #ffffff;
+    font-weight: normal;
+    font-size: 20px;
+    display: inline-block;
+    padding-bottom: 3px;
+}
+
+h2
+{
+    color: #000000;
+    font-weight: normal;
+    font-size: 16px;
+    padding-top: 30px;
+}
+
+h1 a,
+h1 a:hover,
+h1 a:visited
+{
+    color: white;
+    text-decoration: none;
+}
+
+/************************************************************************/
+/* Buttons */
+/************************************************************************/
+
+input[type=submit],
+input[type=button],
+button
+{
+    padding: 1px 8px 1px 8px;
+}
+
+input[type=submit]:hover,
+input[type=button]:hover,
+button
+{
+    cursor: pointer;
+}
+.white_text,
+.white_text p,
+.white_text h2,
+.white_text span
+{
+    color: #ffffff;
+}
+
+.black_text
+{
+    color: #000;
+}
+
+.blue
+{
+    color: #fff;
+    background: #195289;
+    border-color: #306da7;
+}
+
+.green
+{
+    color: #fff;
+    background: #0c7b4e;
+    border-color: #29ae78;
+}
+
+.error
+{
+    position: relative;
+    display: block;
+    margin: auto;
+    clear: both;
+    padding-top: 10px;
+}
+.error p
+{
+    color: #ff0000;
+}
+.page_error_h1,
+.page_error_p
+{
+    color: red;
+    font-weight: 500;
+}
+
+/************************************************************************/
+/*Input controls*/
+/************************************************************************/
+
+input[type=text],
+input[type=password],
+textarea
+{
+    border: 1px solid #dddddd;
+    padding: 2px;
+    width: 200px;
+}
+select
+{
+    width: 200px;
+}
+#select_version
+{
+    width: 150px;
+}
+
+
+/************************************************************************/
+/* Navigation and Link Lists */
+/************************************************************************/
+
+#navigation
+{
+    list-style: none;
+    padding: 4px 0 3px 0;
+    margin: 0;
+    background-color: #0c7b4e;
+}
+#products_navigation
+{
+    list-style: none;
+    padding: 2px 0 2px 0;
+    margin: 0;
+    background-color: #195289;
+}
+
+#navigation li
+{
+    display: inline;
+    cursor: pointer;
+    background: #0c7b4e;
+}
+#products_navigation li
+{
+    display: inline;
+    cursor: pointer;
+    background: #195289;
+}
+
+#navigation li a,
+#products_navigation li a,
+#navigation li a:hover,
+#products_navigation li a:hover,
+#navigation li a:visited,
+#products_navigation li a:visited
+{
+    padding: 3px 20px 3px 20px;
+    font-size: 14px;
+    color: #ffffff;
+    text-decoration: none;
+}
+.selected
+{
+    background: #195289;
+    cursor: default !important;
+}
+.selected .title
+{
+    color: #ffffff;
+}

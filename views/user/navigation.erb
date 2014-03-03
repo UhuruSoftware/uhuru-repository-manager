@@ -1,0 +1,6 @@
+<ul id="navigation">
+    <li><a href="<%= Uhuru::RepositoryManager::USER_DASHBOARD %>" class="<%= request.path_info.start_with?(Uhuru::RepositoryManager::USER_DASHBOARD) ? 'selected' : ''  %>">Dashboard</a></li>
+    <li><a href="<%= Uhuru::RepositoryManager::USER_HOWTO %>" class="<%= request.path_info.start_with?(Uhuru::RepositoryManager::USER_HOWTO) ? 'selected' : ''  %>">How To</a></li>
+    <li><a href="<%= Uhuru::RepositoryManager::USER_KEYS %>" class="<%= request.path_info.start_with?(Uhuru::RepositoryManager::USER_KEYS) ? 'selected' : ''  %>">Keys</a></li>
+    <li class="right"><a href="<%= Uhuru::RepositoryManager::USER_ACCOUNT_SETTINGS %>" class="<%= request.path_info.start_with?(Uhuru::RepositoryManager::USER_ACCOUNT_SETTINGS) ? 'selected' : ''  %>">Account Settings</a></li>
+</ul>

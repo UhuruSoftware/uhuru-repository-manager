@@ -1,0 +1,84 @@
+<% if logged_in_as_admin? %>
+    <%= erb :'admin/navigation' %>
+    <% form_method = Uhuru::RepositoryManager::ADMIN_ACCOUNT_SETTINGS %>
+<% else %>
+    <%= erb :'user/navigation' %>
+    <% form_method = Uhuru::RepositoryManager::USER_ACCOUNT_SETTINGS %>
+<% end %>
+
+<!--  inline css to style this particular view  -->
+<div class="view_container">
+  <fieldset class="account_settings">
+    <legend>Account settings</legend>
+
+    <form method="post" action="<%= form_method %>">
+      <table>
+        <tr>
+          <td><label for="username">E-mail</label></td>
+          <td><input type="text" value="<%= user.username %>" name="username" disabled/></td>
+        </tr>
+
+        <tr>
+          <td><label for="password">Password</label></td>
+          <td><input type="password" value="" name="password" /></td>
+        </tr>
+
+        <tr>
+          <td><label for="confirm_password">Confirm Password</label></td>
+          <td><input type="password" value="" name="confirm_password" /></td>
+        </tr>
+
+        <tr>
+          <td><label for="first_name">First Name</label></td>
+          <td><input type="text" value="<%= user.first_name %>" name="first_name" /></td>
+        </tr>
+
+        <tr>
+          <td><label for="last_name">Last Name</label></td>
+          <td><input type="text" value="<%= user.last_name %>" name="last_name" /></td>
+        </tr>
+
+        <tr>
+          <td><label for="job_title">Job Title</label></td>
+          <td><input type="text" value="<%= user.job_title %>" name="job_title" /></td>
+        </tr>
+
+        <tr>
+          <td><label for="organization">Organization</label></td>
+          <td><input type="text" value="<%= user.organization %>" name="organization" /></td>
+        </tr>
+
+        <tr>
+          <td><label for="country">Country</label></td>
+          <td>
+            <select id="country" name="country">
+                <% countries.each do |country| %>
+                    <option value="<%= country %>" <%= country == user.country ? 'selected' : '' %>><%= country %></option>
+                <% end %>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="city">City</label></td>
+          <td><input type="text" name="city" value="<%= user.city %>"/></td>
+        </tr>
+
+        <tr>
+          <td><label for="address">Address</label></td>
+          <td><input type="text" name="address" value="<%= user.address %>"/></td>
+        </tr>
+
+        <tr>
+          <td><label for="phone">Telephone</label></td>
+          <td><input type="text" name="phone" value="<%= user.phone %>"/></td>
+        </tr>
+      </table>
+
+      <div class="clear-height-10px"></div>
+      <input type="submit" value="Save" class="green right" />
+    </form>
+
+    <div class="clear-height-10px"></div>
+    <div class="error"><p><%= defined?(error_message) && error_message != nil ? error_message.message.capitalize : ''  %></p></div>
+  </fieldset>
+</div>
