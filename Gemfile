@@ -14,5 +14,5 @@ gem 'sequel', '~> 3.48'
 gem "pg"
 gem "encryptor"
 
-gem "blobstore_client", :git => "git@github.com:UhuruSoftware/bosh.git", :ref => '7f8d043e60f19fd4ed376b77ee1f4b78c30e1026'
+gem "blobstore_client", :git => "git@github.com:UhuruSoftware/bosh.git", :ref => '88c3cc7b25ec5df7098edd6de3adf74ec4750680'
 gem "rack-recaptcha", :require => 'rack/recaptcha'

@@ -1,7 +1,7 @@
 GIT
   remote: git@github.com:UhuruSoftware/bosh.git
-  revision: 7f8d043e60f19fd4ed376b77ee1f4b78c30e1026
-  ref: 7f8d043e60f19fd4ed376b77ee1f4b78c30e1026
+  revision: 88c3cc7b25ec5df7098edd6de3adf74ec4750680 
+  ref: 88c3cc7b25ec5df7098edd6de3adf74ec4750680 
   specs:
     blobstore_client (1.1868.0)
       aws-sdk (= 1.8.5)
