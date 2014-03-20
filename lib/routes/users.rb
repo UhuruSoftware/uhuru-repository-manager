@@ -188,7 +188,7 @@ module Uhuru
           return Uhuru::RepositoryManager::Error.new('Signup error', 'User password and confirm password does not match.')
         elsif password == nil || password == ''
           return Uhuru::RepositoryManager::Error.new('Signup error', 'User password can not be blank.')
-        elsif !password_length(password)
+        elsif !(password.length <= PASSWORD_MAXIMUM_LENGTH && password.length >= PASSWORD_MINIMUM_LENGTH)
           return Uhuru::RepositoryManager::Error.new('Signup error', "User password needs to be between #{PASSWORD_MINIMUM_LENGTH} and #{PASSWORD_MAXIMUM_LENGTH} characters.")
         elsif organization == ''
           return Uhuru::RepositoryManager::Error.new('Signup error', 'Organization can not be blank.')
