@@ -155,6 +155,13 @@ button
     color: #000;
 }
 
+.hint
+{
+    color: #fff;
+    background-color: darkgray;
+    border-radius: 3px;
+    padding: 1px 5px 1px 5px;
+}
 .blue
 {
     color: #fff;

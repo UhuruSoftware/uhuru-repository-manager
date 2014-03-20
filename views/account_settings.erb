@@ -14,37 +14,40 @@
     <form method="post" action="<%= form_method %>">
       <table>
         <tr>
-          <td><label for="username">E-mail</label></td>
+          <td><label for="username">E-mail(username)</label></td>
           <td><input type="text" value="<%= user.username %>" name="username" disabled/></td>
         </tr>
 
         <tr>
-          <td><label for="password">Password</label></td>
-          <td><input type="password" value="" name="password" /></td>
+          <td><label for="password">Password *</label></td>
+          <td><input type="password" value="" name="password" onblur="checkPassword(this)" /></td>
+        </tr>
+        <tr>
+          <td colspan="2"><div id="hint" class="hint" style="display: none;"></div></td>
         </tr>
 
         <tr>
-          <td><label for="confirm_password">Confirm Password</label></td>
+          <td><label for="confirm_password">Confirm Password *</label></td>
           <td><input type="password" value="" name="confirm_password" /></td>
         </tr>
 
         <tr>
-          <td><label for="first_name">First Name</label></td>
+          <td><label for="first_name">First Name *</label></td>
           <td><input type="text" value="<%= user.first_name %>" name="first_name" /></td>
         </tr>
 
         <tr>
-          <td><label for="last_name">Last Name</label></td>
+          <td><label for="last_name">Last Name *</label></td>
           <td><input type="text" value="<%= user.last_name %>" name="last_name" /></td>
         </tr>
 
         <tr>
-          <td><label for="job_title">Job Title</label></td>
+          <td><label for="job_title">Job Title *</label></td>
           <td><input type="text" value="<%= user.job_title %>" name="job_title" /></td>
         </tr>
 
         <tr>
-          <td><label for="organization">Organization</label></td>
+          <td><label for="organization">Organization *</label></td>
           <td><input type="text" value="<%= user.organization %>" name="organization" /></td>
         </tr>
 
@@ -72,6 +75,12 @@
           <td><label for="phone">Telephone</label></td>
           <td><input type="text" name="phone" value="<%= user.phone %>"/></td>
         </tr>
+
+        <tr>
+          <td colspan="2">
+            <div class="hint">The fields marked with (*) are mandatory.</div>
+          </td>
+        </tr>
       </table>
 
       <div class="clear-height-10px"></div>
@@ -82,3 +91,19 @@
     <div class="error"><p><%= defined?(error_message) && error_message != nil ? error_message.message.capitalize : ''  %></p></div>
   </fieldset>
 </div>
+
+<script type="text/javascript">
+    function checkPassword(element)
+    {
+        if(((element.value.length >= <%= Uhuru::RepositoryManager::PASSWORD_MINIMUM_LENGTH %>) && (element.value.length <= <%= Uhuru::RepositoryManager::PASSWORD_MAXIMUM_LENGTH %>)) == false)
+        {
+            document.getElementById('hint').innerHTML = "The password needs to be between <%= Uhuru::RepositoryManager::PASSWORD_MINIMUM_LENGTH %> and <%= Uhuru::RepositoryManager::PASSWORD_MAXIMUM_LENGTH %> characters.";
+            document.getElementById('hint').style.display = 'block';
+        }
+        else
+        {
+            document.getElementById('hint').innerHTML = '';
+            document.getElementById('hint').style.display = 'none';
+        }
+    }
+</script>

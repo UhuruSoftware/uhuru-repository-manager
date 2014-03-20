@@ -106,6 +106,16 @@ module Uhuru
           countries_file = File.expand_path("../../../config/countries.txt", __FILE__)
           countries = File.open(countries_file, "rb").read.split(';')
 
+          email = params[:username]
+          first_name = params[:first_name]
+          last_name = params[:last_name]
+          job_title = params[:job_title]
+          organization = params[:organization]
+          country = params[:country]
+          city = params[:city]
+          address = params[:address]
+          phone = params[:phone]
+
           begin
             if $config[:recaptcha][:use_recaptcha] == true || $config[:recaptcha][:use_recaptcha] == 'true'
               unless recaptcha_valid?
@@ -114,11 +124,11 @@ module Uhuru
             end
 
             # check if the email address is valid
-            unless /\b[A-Z0-9._%a-z\-]+@(?:[A-Z0-9a-z\-]+\.)+[A-Za-z]{2,4}\z/.match(params[:username])
+            unless /\b[A-Z0-9._%a-z\-]+@(?:[A-Z0-9a-z\-]+\.)+[A-Za-z]{2,4}\z/.match(email)
               raise Uhuru::RepositoryManager::Error.new('Signup error', 'Please enter a valid email address.')
             end
             # sanitize the first and last name, pop error if one of them are nill
-            unless /[a-zA-Z\-'\s]+/.match(params[:first_name]) && /[a-zA-Z\-'\s]+/.match(params[:last_name])
+            unless /[a-zA-Z\-'\s]+/.match(first_name) && /[a-zA-Z\-'\s]+/.match(last_name)
               raise Uhuru::RepositoryManager::Error.new('Signup error', 'Please type a valid first name and last name.')
             end
 
@@ -126,16 +136,16 @@ module Uhuru
               raise Uhuru::RepositoryManager::Error.new('Signup error', 'Your password and confirm password does not match.')
             elsif params[:password] == nil || params[:password] == ''
               raise Uhuru::RepositoryManager::Error.new('Signup error', 'Your password can not be blank.')
-            elsif params[:password].length < 8
-              raise Uhuru::RepositoryManager::Error.new('Signup error', 'Your password is to short. Please try again.')
-            elsif Uhuru::RepositoryManager::Model::Users.get_users(:username => params[:username]) != []
+            elsif !password_length(params[:password])
+              raise Uhuru::RepositoryManager::Error.new('Signup error', "User password needs to be between #{PASSWORD_MINIMUM_LENGTH} and #{PASSWORD_MAXIMUM_LENGTH} characters.")
+            elsif Uhuru::RepositoryManager::Model::Users.get_users(:username => email) != []
               raise Uhuru::RepositoryManager::Error.new('Signup error', 'The user already exists, try a different account name.')
-            elsif params[:organization] == ''
+            elsif organization == ''
               raise Uhuru::RepositoryManager::Error.new('Signup error', 'Organization can not be blank.')
             end
 
-            user = Uhuru::RepositoryManager::Model::Users.create(params[:username], params[:first_name], params[:last_name], params[:organization], params[:job_title], params[:country], params[:city], params[:address], params[:phone], nil)
-            Uhuru::RepositoryManager::HtpasswdHandler.create_password(params[:username], params[:password])
+            user = Uhuru::RepositoryManager::Model::Users.create(email, first_name, last_name, organization, job_title, country, city, address, phone, nil)
+            Uhuru::RepositoryManager::HtpasswdHandler.create_password(email, params[:password])
 
             expire_in_days = $config[:repository_manager][:activation_link_expiration_days]
             signup_token = Uhuru::RepositoryManager::Model::UserTokens.create(user, Time.now + (60 *60 *24 * expire_in_days), 'registration')
@@ -157,6 +167,16 @@ module Uhuru
             render_erb do
               template :'guest/signup'
               layout :'layouts/layout'
+              var :email, email
+              var :first_name, first_name
+              var :last_name, last_name
+              var :job_title, job_title
+              var :organization, organization
+              var :selected_country, country
+              var :city, city
+              var :address, address
+              var :phone, phone
+
               var :countries, countries
               var :error_message, e
             end

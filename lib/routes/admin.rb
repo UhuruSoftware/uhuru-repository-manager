@@ -149,12 +149,10 @@ module Uhuru
             if params[:password] != params[:confirm_password]
               raise Uhuru::RepositoryManager::Error.new('Change password', 'Your password does not match with the confirmation password.')
             else
-              if params[:password].length >= 8
-                Uhuru::RepositoryManager::HtpasswdHandler.create_password(params[:username], params[:password])
+              if password_length(params[:password])
+                Uhuru::RepositoryManager::HtpasswdHandler.create_password(session[:username], params[:password])
               else
-                if params[:password] != nil && params[:password] != ""
-                  raise Uhuru::RepositoryManager::Error.new('Change password', 'Your password is too short.')
-                end
+                raise Uhuru::RepositoryManager::Error.new('Change password', "User password needs to be between #{PASSWORD_MINIMUM_LENGTH} and #{PASSWORD_MAXIMUM_LENGTH} characters.")
               end
             end
 
