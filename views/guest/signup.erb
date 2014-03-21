@@ -4,22 +4,25 @@
       <table>
         <tr>
           <td><label for="username">E-mail *</label></td>
-          <td><input type="text" name="username" id="username" autofocus=""/></td>
+          <td><input type="text" name="username" id="username" autofocus="" value="<%= defined?(email) ? email : '' %>"/></td>
         </tr>
 
         <tr>
           <td><label for="first_name">First name *</label></td>
-          <td><input type="text" name="first_name" id="first_name"/></td>
+          <td><input type="text" name="first_name" id="first_name" value="<%= defined?(first_name) ? first_name : '' %>"/></td>
         </tr>
 
         <tr>
           <td><label for="last_name">Last Name *</label></td>
-          <td><input type="text" name="last_name" id="last_name"/></td>
+          <td><input type="text" name="last_name" id="last_name" value="<%= defined?(last_name) ? last_name : '' %>"/></td>
         </tr>
 
         <tr>
           <td><label for="password">Password *</label></td>
-          <td><input type="password" name="password" autocomplete="off"/></td>
+          <td><input type="password" name="password" autocomplete="off" onblur="checkPassword(this)"/></td>
+        </tr>
+        <tr>
+          <td colspan="2"><div id="hint" class="hint hidden"></div></td>
         </tr>
 
         <tr>
@@ -29,12 +32,12 @@
 
         <tr>
           <td><label for="job_title">Job Title *</label></td>
-          <td><input type="text" name="job_title"/></td>
+          <td><input type="text" name="job_title" id="job_title" value="<%= defined?(job_title) ? job_title : '' %>"/></td>
         </tr>
 
         <tr>
           <td><label for="organization">Organization *</label></td>
-          <td><input type="text" name="organization" id="organization"/></td>
+          <td><input type="text" name="organization" id="organization" value="<%= defined?(organization) ? organization : '' %>"/></td>
         </tr>
 
         <tr>
@@ -42,7 +45,7 @@
           <td>
             <select id="country" name="country">
               <% countries.each do |country| %>
-                  <option value="<%= country %>"><%= country %></option>
+                  <option value="<%= defined?(selected_country) ? selected_country : country %>"><%= defined?(selected_country) ? selected_country : country %></option>
               <% end %>
             </select>
           </td>
@@ -50,30 +53,46 @@
 
         <tr>
           <td><label for="city">City</label></td>
-          <td><input type="text" name="city"/></td>
+          <td><input type="text" name="city" id="city" value="<%= defined?(city) ? city : '' %>"/></td>
         </tr>
 
         <tr>
           <td><label for="address">Address</label></td>
-          <td><input type="text" name="address"/></td>
+          <td><input type="text" name="address" id="address" value="<%= defined?(address) ? address : '' %>"/></td>
         </tr>
 
         <tr>
           <td><label for="phone">Telephone</label></td>
-          <td><input type="text" name="phone"/></td>
+          <td><input type="text" name="phone" id="phone" value="<%= defined?(phone) ? phone : '' %>"/></td>
         </tr>
       </table>
+
       <% if $config[:recaptcha][:use_recaptcha] == true || $config[:recaptcha][:use_recaptcha] == 'true' %>
           <%= recaptcha_tag :challenge, :language => :en, :ssl => true %>
       <% end %>
 
+      <div class="hint">The fields marked with (*) are mandatory.</div>
       <div>
         <input class="blue" type="submit" name="Submit" value="Register" />
       </div>
-
-      <div>The field marked with (*) are mandatory.</div>
 
       <div class="error"><p><%= defined?(error_message) && error_message != nil ? error_message.message.capitalize : ''  %></p></div>
     </div>
   </div>
 </form>
+
+<script type="text/javascript">
+    function checkPassword(element)
+    {
+        if(((element.value.length >= <%= Uhuru::RepositoryManager::PASSWORD_MINIMUM_LENGTH %>) && (element.value.length <= <%= Uhuru::RepositoryManager::PASSWORD_MAXIMUM_LENGTH %>)) == false)
+        {
+            document.getElementById('hint').innerHTML = "The password needs to be between <%= Uhuru::RepositoryManager::PASSWORD_MINIMUM_LENGTH %> and <%= Uhuru::RepositoryManager::PASSWORD_MAXIMUM_LENGTH %> characters.";
+            document.getElementById('hint').style.display = 'block';
+        }
+        else
+        {
+            document.getElementById('hint').innerHTML = '';
+            document.getElementById('hint').style.display = 'none';
+        }
+    }
+</script>

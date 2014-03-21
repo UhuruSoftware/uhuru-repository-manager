@@ -43,6 +43,10 @@ require "htpasswd_handler"
 require "logger"
 
 module Uhuru::RepositoryManager
+  # setup constants for password length
+  PASSWORD_MINIMUM_LENGTH = 4
+  PASSWORD_MAXIMUM_LENGTH = 10
+
   class RepositoryManager < Sinatra::Base
 
     ENV_COPY  = %w[ REQUEST_METHOD HTTP_COOKIE rack.request.cookie_string
@@ -211,6 +215,16 @@ module Uhuru::RepositoryManager
       else
         return false
       end
+    end
+
+    # a method designed to check the password input
+    def password_length(password)
+      # set the password length for register new user and update user data
+      password_max_length = PASSWORD_MAXIMUM_LENGTH
+      password_min_length = PASSWORD_MINIMUM_LENGTH
+
+      return true if password.length <= password_max_length && password.length >= password_min_length
+      return false
     end
   end
 
