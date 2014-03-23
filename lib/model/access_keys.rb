@@ -66,6 +66,6 @@ class AccessKey < Sequel::Model
 
     validates_presence [:name, :value, :user_id]
     validates_unique :value
-    validates_format Regexp.new('ssh-rsa AAAA[0-9A-Za-z+/]+[=]{0,3} ([^@]+@[^@]+)'), :value
+    validates_format Regexp.new('ssh-rsa AAAA[0-9A-Za-z+\/\s-]+'), :value
   end
 end
