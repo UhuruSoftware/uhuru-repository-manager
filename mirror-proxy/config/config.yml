@@ -1,0 +1,5 @@
+---
+pid_file: /tmp/mirror-proxy.pid
+port: 9193
+ssh_port: 30000
+master_mirror : urm.uhurusoftware.com
