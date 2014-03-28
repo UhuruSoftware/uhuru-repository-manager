@@ -1,0 +1,65 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    addressable (2.3.5)
+    cookiejar (0.3.0)
+    daemons (1.1.9)
+    em-http-request (1.1.2)
+      addressable (>= 2.3.4)
+      cookiejar
+      em-socksify (>= 0.3)
+      eventmachine (>= 1.0.3)
+      http_parser.rb (>= 0.6.0)
+    em-socksify (0.3.0)
+      eventmachine (>= 1.0.0.beta.4)
+    eventmachine (1.0.3-x86-mingw32)
+    http_parser.rb (0.6.0)
+    httpclient (2.2.4)
+    json_pure (1.8.1)
+    membrane (0.0.2)
+    mime-types (2.1)
+    multipart-post (2.0.0)
+    nats (0.4.26)
+      daemons (>= 1.1.5)
+      eventmachine (>= 0.12.10)
+      json_pure (>= 1.7.3)
+      thin (>= 1.4.1)
+    posix-spawn (0.3.8)
+    rack (1.5.2)
+    rack-protection (1.5.2)
+      rack
+    rake (10.1.1)
+    sinatra (1.4.4)
+      rack (~> 1.4)
+      rack-protection (~> 1.4)
+      tilt (~> 1.3, >= 1.3.4)
+    thin (1.5.1)
+      daemons (>= 1.0.9)
+      eventmachine (>= 0.12.6)
+      rack (>= 1.0.0)
+    tilt (1.4.1)
+    vcap_common (2.0.11)
+      em-http-request (~> 1.0)
+      eventmachine
+      httpclient
+      membrane (~> 0.0.2)
+      mime-types
+      multipart-post
+      nats (~> 0.4.24)
+      posix-spawn (~> 0.3.6)
+      thin
+      vmstat (~> 2.0)
+      yajl-ruby
+    vcap_logging (0.1.4)
+      rake
+    vmstat (2.1.0)
+    yajl-ruby (1.1.0-x86-mingw32)
+
+PLATFORMS
+  x86-mingw32
+
+DEPENDENCIES
+  sinatra (~> 1.4)
+  thin
+  vcap_common
+  vcap_logging
