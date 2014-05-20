@@ -93,11 +93,20 @@ module Uhuru::RepositoryManager
       ucc_public_group = "#{UCC_GROUP}_public"
       ucc_private_group = "#{UCC_GROUP}_private"
 
+      # only if the ucc version is the last one that is public and stable should remove users from ucc public group
+      last_ucc_public = false;
+      Uhuru::RepositoryManager::Model::Products.get_products(:type => "ucc").each do |ucc_product|
+        break if ucc_product.is_public? && ucc_product.is_stable?
+        last_ucc_public = true;
+      end
+
       Uhuru::RepositoryManager::Model::Users.get_users.each do |user|
         user_sys = user.user_sys
 
-        # remove all users from UCC group
-        `[ ! -z "\`cat /etc/group|grep #{user_sys}|grep #{ucc_public_group}\`" ] && gpasswd -d #{user_sys} #{ucc_public_group}`
+        # remove all users from UCC public group
+        if last_ucc_public
+          `[ ! -z "\`cat /etc/group|grep #{user_sys}|grep #{ucc_public_group}\`" ] && gpasswd -d #{user_sys} #{ucc_public_group}`
+        end
         `[ ! -z "\`cat /etc/group|grep #{user_sys}|grep #{ucc_private_group}\`" ] && gpasswd -d #{user_sys} #{ucc_private_group}`
 
         # for guests add user to UCC group
