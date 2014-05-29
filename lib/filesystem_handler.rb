@@ -90,33 +90,32 @@ module Uhuru::RepositoryManager
     #
     def self.update_ucc_version(version_obj)
 
-      ucc_public_group = "#{UCC_GROUP}_public"
-      ucc_private_group = "#{UCC_GROUP}_private"
-
       # only if the ucc version is the last one that is public and stable should remove users from ucc public group
-      last_ucc_public = false;
+      last_ucc_public = false
       Uhuru::RepositoryManager::Model::Products.get_products(:type => "ucc").each do |ucc_product|
-        break if ucc_product.is_public? && ucc_product.is_stable?
-        last_ucc_public = true;
+        next if ucc_product.is_public? && ucc_product.is_stable?
+        last_ucc_public = true
+        break
       end
 
       Uhuru::RepositoryManager::Model::Users.get_users.each do |user|
         user_sys = user.user_sys
 
-        # remove all users from UCC public group
+        # remove user from UCC public group if is the last public and stable ucc
         if last_ucc_public
-          `[ ! -z "\`cat /etc/group|grep #{user_sys}|grep #{ucc_public_group}\`" ] && gpasswd -d #{user_sys} #{ucc_public_group}`
+          `[ ! -z "\`cat /etc/group|grep #{user_sys}|grep #{UCC_GROUP}_public\`" ] && gpasswd -d #{user_sys} #{UCC_GROUP}_public`
         end
-        `[ ! -z "\`cat /etc/group|grep #{user_sys}|grep #{ucc_private_group}\`" ] && gpasswd -d #{user_sys} #{ucc_private_group}`
+        # remove user from ucc private group
+        `[ ! -z "\`cat /etc/group|grep #{user_sys}|grep #{UCC_GROUP}_private\`" ] && gpasswd -d #{user_sys} #{UCC_GROUP}_private`
 
         # for guests add user to UCC group
         if version_obj.public && version_obj.stable
-          `gpasswd -a #{user_sys} #{ucc_public_group}`
+          `gpasswd -a #{user_sys} #{UCC_GROUP}_public`
         elsif !version_obj.public && version_obj.stable
 
           # check if user has access add user to UCC group
           if version_obj.product.users.include?(user)
-            `gpasswd -a #{user_sys} #{ucc_private_group}`
+            `gpasswd -a #{user_sys} #{UCC_GROUP}_private`
           end
         end
       end
