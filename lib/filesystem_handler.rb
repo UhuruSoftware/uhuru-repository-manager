@@ -93,9 +93,7 @@ module Uhuru::RepositoryManager
       # only if the ucc version is the last one that is public and stable should remove users from ucc public group
       last_ucc_public = false
       Uhuru::RepositoryManager::Model::Products.get_products(:type => "ucc").each do |ucc_product|
-        next if ucc_product.is_public? && ucc_product.is_stable?
-        last_ucc_public = true
-        break
+        last_ucc_public = last_ucc_public && !(ucc_product.is_public? && ucc_product.is_stable?)
       end
 
       Uhuru::RepositoryManager::Model::Users.get_users.each do |user|
